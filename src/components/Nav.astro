@@ -3,7 +3,7 @@ import { site, nav } from "../data/content";
 import ThemeToggle from "./ThemeToggle.astro";
 ---
 
-<header class="sticky top-0 z-50 bg-[color-mix(in_srgb,var(--color-bg)_88%,transparent)] backdrop-blur border-b border-[var(--color-border)]">
+<header class="sticky top-0 z-50 bg-[color-mix(in_srgb,var(--color-bg)_92%,transparent)] backdrop-blur border-b border-[var(--color-border)]">
   <div class="shell flex items-center justify-between gap-4 px-5 sm:px-8 py-3.5">
     <a href="#top" class="flex items-baseline gap-3 min-w-0 group">
       <span class="font-display font-semibold tracking-tight text-[1.02rem] text-[var(--color-ink)] truncate">
@@ -56,57 +56,59 @@ import ThemeToggle from "./ThemeToggle.astro";
       </button>
     </div>
   </div>
-
-  <!-- Mobile panel — true full-screen takeover, lives outside the
-       sticky header's transparent bg so it can never be misread as
-       "broken" -->
-  <div
-    id="mobile-nav-panel"
-    data-nav-panel
-    class="nav-panel lg:hidden"
-    role="dialog"
-    aria-modal="true"
-    aria-label="Site navigation"
-  >
-    <!-- Inline panel header so we have a clear way to close on mobile -->
-    <div class="flex items-center justify-between gap-4 px-5 sm:px-8 py-3.5 border-b border-[var(--color-border)]">
-      <span class="font-display font-semibold tracking-tight text-[1.02rem] text-[var(--color-ink)]">
-        {site.name}
-      </span>
-      <button
-        type="button"
-        data-nav-close
-        aria-label="Close menu"
-        class="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-[var(--color-border-2)] font-mono text-[0.7rem] uppercase tracking-[0.1em] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] hover:border-[var(--color-rule)] transition-colors min-h-[40px]"
-      >
-        Close
-        <span aria-hidden="true">×</span>
-      </button>
-    </div>
-
-    <div class="shell px-5 sm:px-8 pt-8 pb-12 flex-1">
-      <p class="eyebrow mb-6">Table of Contents</p>
-      <nav class="flex flex-col">
-        {
-          nav.map((item) => (
-            <a
-              href={item.href}
-              class="group flex items-baseline justify-between gap-4 py-4 border-b border-[var(--color-border)] hover:text-[var(--color-accent)] transition-colors"
-            >
-              <span class="font-display text-[clamp(1.6rem,7vw,2.25rem)] font-semibold tracking-[-0.02em] text-[var(--color-ink)] group-hover:text-[var(--color-accent)] transition-colors">
-                {item.label}
-              </span>
-              <span class="font-mono text-xs tracking-[0.14em] text-[var(--color-muted)] shrink-0">
-                {item.page}
-              </span>
-            </a>
-          ))
-        }
-      </nav>
-      <a href="#contact" class="btn-primary mt-8 w-full justify-center">
-        Let's talk
-        <span aria-hidden="true">→</span>
-      </a>
-    </div>
-  </div>
 </header>
+
+<!-- Mobile panel — rendered OUTSIDE the sticky <header> on purpose.
+     The header uses `backdrop-blur` (= `backdrop-filter`), which makes
+     it the containing block for any fixed-position descendant. If the
+     panel lived inside it, `position: fixed; inset: 0` would size it
+     to the header rect (~60px tall) instead of the viewport. -->
+<div
+  id="mobile-nav-panel"
+  data-nav-panel
+  class="nav-panel lg:hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Site navigation"
+>
+  <!-- Inline panel header so we have a clear way to close on mobile -->
+  <div class="flex items-center justify-between gap-4 px-5 sm:px-8 py-3.5 border-b border-[var(--color-border)]">
+    <span class="font-display font-semibold tracking-tight text-[1.02rem] text-[var(--color-ink)]">
+      {site.name}
+    </span>
+    <button
+      type="button"
+      data-nav-close
+      aria-label="Close menu"
+      class="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-[var(--color-border-2)] font-mono text-[0.7rem] uppercase tracking-[0.1em] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] hover:border-[var(--color-rule)] transition-colors min-h-[40px]"
+    >
+      Close
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+
+  <div class="shell w-full px-5 sm:px-8 pt-8 pb-12 flex-1 min-h-0 overflow-y-auto">
+    <p class="eyebrow mb-6">Table of Contents</p>
+    <nav class="flex flex-col">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            class="group flex items-baseline justify-between gap-4 py-4 border-b border-[var(--color-border)] hover:text-[var(--color-accent)] transition-colors"
+          >
+            <span class="font-display text-[clamp(1.6rem,7vw,2.25rem)] font-semibold tracking-[-0.02em] text-[var(--color-ink)] group-hover:text-[var(--color-accent)] transition-colors">
+              {item.label}
+            </span>
+            <span class="font-mono text-xs tracking-[0.14em] text-[var(--color-muted)] shrink-0">
+              {item.page}
+            </span>
+          </a>
+        ))
+      }
+    </nav>
+    <a href="#contact" class="btn-primary mt-8 w-full justify-center">
+      Let's talk
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</div>

@@ -412,10 +412,20 @@ html[data-theme="dark"] {
   /* Content above the paper overlay */
   main, header, footer { position: relative; z-index: 2; }
 
-  /* ---- Mobile nav panel (bookmark-style table of contents) -------- */
+  /* ---- Mobile nav panel (bookmark-style table of contents) --------
+     Must live OUTSIDE any ancestor with backdrop-filter / transform /
+     filter / perspective — those create a containing block for fixed
+     descendants and would collapse this panel to the ancestor's box. */
   .nav-panel {
     position: fixed;
-    inset: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    /* Use the full visual viewport on mobile so the panel always fills
+       the area between the browser chrome bars. */
+    height: 100vh;
+    height: 100dvh;
     z-index: 60;
     display: flex;
     flex-direction: column;
@@ -428,7 +438,6 @@ html[data-theme="dark"] {
       transform 0.28s ease,
       visibility 0.28s ease;
     visibility: hidden;
-    overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
   }
