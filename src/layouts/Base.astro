@@ -5,12 +5,86 @@ import { site } from "../data/content";
 interface Props {
   title?: string;
   description?: string;
+  /** Path to a 1200x630 social image, relative to /public. */
+  ogImage?: string;
+  /** Override the canonical URL; defaults to the current page URL. */
+  canonical?: string;
+  /** "website" for the homepage, "article" for blog posts, etc. */
+  ogType?: "website" | "article" | "profile";
 }
 
 const {
   title = `${site.name} — ${site.title}`,
-  description = `${site.name} (${site.fullName}) — ${site.title} based in ${site.location}. Automation systems, backend services and full-stack products.`,
+  description = `${site.name} (${site.fullName}) — ${site.title} based in ${site.location}. I design and build AI-driven automation, backend services, and full-stack products that replace entire workflows, not single tasks.`,
+  ogImage = "/og-image.png",
+  canonical,
+  ogType = "website",
 } = Astro.props;
+
+// Astro.site is set in astro.config.mjs. Astro.url is the current page URL
+// at build time. We resolve everything to fully-qualified absolute URLs so
+// crawlers, Slack/iMessage/Twitter unfurlers, and JSON-LD validators are
+// all happy.
+const siteUrl = Astro.site ?? new URL("https://hassan-sanwal-portfolio.vercel.app");
+const canonicalUrl = canonical
+  ? new URL(canonical, siteUrl).toString()
+  : new URL(Astro.url.pathname, siteUrl).toString();
+const absoluteOgImage = new URL(ogImage, siteUrl).toString();
+const resumeAbsoluteUrl = site.resumeUrl
+  ? new URL(site.resumeUrl, siteUrl).toString()
+  : undefined;
+
+const sameAs = site.socials
+  .filter((s) => !s.href.startsWith("mailto:"))
+  .map((s) => s.href);
+
+// Schema.org Person + WebSite. Person is the right primary entity here
+// because this is a personal portfolio. WebSite enables the search-action
+// hint (we don't have site search, so we omit it) and ties the URL to the
+// person via `mainEntity`.
+const personLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: site.fullName,
+  alternateName: site.name,
+  url: siteUrl.toString(),
+  image: absoluteOgImage,
+  email: `mailto:${site.email}`,
+  jobTitle: site.title,
+  description,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Lahore",
+    addressCountry: "PK",
+  },
+  worksFor: {
+    "@type": "Organization",
+    name: "RobustCraft",
+  },
+  knowsAbout: [
+    "AI Automation",
+    "n8n",
+    "LangChain",
+    "Agentic AI",
+    "Full-Stack Development",
+    "Next.js",
+    "Node.js",
+    "Flutter",
+    "Salesforce",
+    "GoHighLevel",
+    "Vapi",
+  ],
+  sameAs,
+};
+
+const websiteLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: `${site.name} — Portfolio`,
+  url: siteUrl.toString(),
+  inLanguage: "en",
+  author: { "@type": "Person", name: site.fullName },
+};
 ---
 
 <!doctype html>
@@ -19,18 +93,61 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="color-scheme" content="light dark" />
 
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="theme-color" content="#F5EFE1" />
+    <link rel="canonical" href={canonicalUrl} />
 
-    <meta property="og:type" content="website" />
+    <meta name="author" content={site.fullName} />
+    <meta
+      name="keywords"
+      content="Hassan Sanwal, Muhammad Hassan Sanwal, automation engineer, AI automation engineer, n8n developer, full-stack developer, LangChain, Next.js, Node.js, Flutter, Lahore, Pakistan, freelance"
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/og-image.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="alternate" type="application/xml" title="Sitemap" href="/sitemap-index.xml" />
+
+    {/* Theme color. The no-flash script below rewrites this on first paint
+        so it matches the user's actual resolved theme, but we also ship a
+        media-queried pair so the OS bar tints correctly before JS runs. */}
+    <meta name="theme-color" content="#F5EFE1" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#17130D" media="(prefers-color-scheme: dark)" />
+
+    {/* ---- Open Graph (Facebook, LinkedIn, iMessage, Slack, Discord) ---- */}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:image" content={absoluteOgImage} />
+    <meta property="og:image:secure_url" content={absoluteOgImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name} — ${site.title}`} />
+
+    {/* ---- Twitter / X ---- */}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteOgImage} />
+    <meta name="twitter:image:alt" content={`${site.name} — ${site.title}`} />
+
+    {/* ---- JSON-LD: Person + WebSite ---- */}
+    <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />
+
+    {/* Hint browsers about the resume PDF so the Download button feels
+        instant on click (downloaded only once the user actually asks). */}
+    {resumeAbsoluteUrl && (
+      <link rel="prefetch" href={site.resumeUrl} as="document" />
+    )}
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

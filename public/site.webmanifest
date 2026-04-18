@@ -1,0 +1,18 @@
+{
+  "name": "Hassan Sanwal — Automation Engineer & Full-Stack Developer",
+  "short_name": "Hassan Sanwal",
+  "description": "Hassan Sanwal — automation engineer and full-stack developer based in Lahore, Pakistan. Building AI-driven automation, backend services and full-stack products.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F5EFE1",
+  "theme_color": "#F5EFE1",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
