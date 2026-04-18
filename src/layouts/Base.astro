@@ -69,6 +69,10 @@ const {
     </a>
     <slot />
 
+    <div class="toast-root" aria-live="polite" aria-atomic="true">
+      <div class="toast" data-toast role="status"></div>
+    </div>
+
     <script>
       // ---- Reveal on scroll ---------------------------------------------
       const io = new IntersectionObserver(
@@ -130,6 +134,63 @@ const {
         (document.documentElement.getAttribute("data-theme") as "light" | "dark") ||
           "light"
       );
+
+      // ---- Mailto → also copy to clipboard + toast ---------------------
+      // Many users don't have a default email client set (especially on
+      // Windows / Gmail-web users), so `mailto:` silently does nothing.
+      // We always copy the address to the clipboard and surface a toast
+      // so the action never feels broken.
+      const toastEl = document.querySelector<HTMLElement>("[data-toast]");
+      let toastTimer: number | undefined;
+      const showToast = (msg: string) => {
+        if (!toastEl) return;
+        toastEl.textContent = msg;
+        toastEl.classList.add("is-visible");
+        if (toastTimer) window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => {
+          toastEl.classList.remove("is-visible");
+        }, 2400);
+      };
+
+      // Legacy + modern copy fallback so it works in every context
+      // (including when clipboard-API permission is denied or the doc
+      // isn't focused).
+      const copyEmailToClipboard = (email: string): boolean => {
+        let ok = false;
+        try {
+          if (navigator.clipboard?.writeText) {
+            navigator.clipboard.writeText(email).catch(() => {});
+            ok = true;
+          }
+        } catch {}
+        try {
+          const ta = document.createElement("textarea");
+          ta.value = email;
+          ta.setAttribute("readonly", "");
+          ta.style.cssText = "position:absolute;left:-9999px;top:0;opacity:0;";
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          document.body.removeChild(ta);
+          ok = true;
+        } catch {}
+        return ok;
+      };
+
+      document
+        .querySelectorAll<HTMLAnchorElement>('a[href^="mailto:"]')
+        .forEach((a) => {
+          a.addEventListener("click", () => {
+            const email = (a.getAttribute("href") || "")
+              .replace(/^mailto:/i, "")
+              .split("?")[0];
+            if (!email) return;
+            const ok = copyEmailToClipboard(email);
+            showToast(
+              ok ? "Email copied to clipboard" : email
+            );
+          });
+        });
 
       // ---- Mobile nav toggle --------------------------------------------
       const navToggle = document.querySelector<HTMLButtonElement>("[data-nav-toggle]");

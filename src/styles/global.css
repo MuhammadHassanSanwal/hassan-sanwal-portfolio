@@ -412,6 +412,39 @@ html[data-theme="dark"] {
   /* Content above the paper overlay */
   main, header, footer { position: relative; z-index: 2; }
 
+  /* Toast — small bottom-center confirmation pill (e.g. "Email copied") */
+  .toast-root {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 24px;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 100;
+    padding: 0 1rem;
+  }
+  .toast {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    background: var(--color-ink);
+    color: var(--color-bg);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.75rem 1.15rem;
+    border-radius: 999px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+    max-width: 92vw;
+    text-align: center;
+  }
+  .toast.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .dot { animation: none; }
