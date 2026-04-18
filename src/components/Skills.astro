@@ -1,0 +1,52 @@
+---
+import { skills } from "../data/content";
+---
+
+<section id="skills" class="section border-t border-[var(--color-border)]">
+  <div class="shell px-5 sm:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 mb-10" data-reveal>
+      <aside class="lg:col-span-2">
+        <p class="eyebrow">p.05</p>
+      </aside>
+      <div class="lg:col-span-10">
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-[var(--color-muted)] mb-4">
+          Chapter Five · Stack
+        </p>
+        <h2 class="font-display font-semibold tracking-[-0.035em] text-5xl sm:text-6xl lg:text-7xl leading-[1.02]">
+          Tools of the
+          <span class="ink-underline text-[var(--color-accent)]">trade</span>.
+        </h2>
+        <p class="mt-5 max-w-xl text-lg text-[var(--color-ink-soft)]">
+          The boring truth — I use whatever gets the job shipped.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
+      <aside class="lg:col-span-2 hidden lg:block">
+        <span class="handnote handnote-md">my kit →</span>
+      </aside>
+      <div class="lg:col-span-10 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+        {
+          skills.groups.map((group, i) => (
+            <div class="paper p-6 sm:p-7">
+              <div class="flex items-baseline justify-between pb-3 mb-4 border-b border-[var(--color-border)]">
+                <h3 class="font-display text-lg sm:text-xl font-semibold tracking-[-0.015em] text-[var(--color-ink)]">
+                  {group.label}
+                </h3>
+                <span class="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-[var(--color-muted)]">
+                  0{i + 1} / 0{skills.groups.length}
+                </span>
+              </div>
+              <ul class="flex flex-wrap gap-2">
+                {group.items.map((item) => (
+                  <li class="chip">{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

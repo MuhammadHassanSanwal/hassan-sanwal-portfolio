@@ -1,0 +1,421 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   DESIGN TOKENS — "Field Notes" / personal journal aesthetic.
+   Warm paper base, rust ink accent, humanist sans + handwritten script.
+   Light by default; dark mode reads like candlelight on paper.
+   ------------------------------------------------------------------------ */
+@theme {
+  /* Paper & ink */
+  --color-bg:        #F5EFE1;  /* warm cream paper */
+  --color-bg-2:      #EEE5D1;  /* slightly darker paper fold */
+  --color-panel:     #FBF7EC;  /* elevated paper (cards) */
+  --color-rule:      #1F1A14;  /* hard rule line */
+  --color-border:    rgba(31, 26, 20, 0.12);
+  --color-border-2:  rgba(31, 26, 20, 0.22);
+
+  /* Text — warm near-black instead of cold */
+  --color-ink:       #1F1A14;
+  --color-ink-soft:  #4A4237;
+  --color-muted:     #8A7F6E;
+  --color-dim:       #B7AD9A;
+
+  /* Rust accent — the ink pen color */
+  --color-accent:       #C14B2A;  /* terracotta / rust */
+  --color-accent-2:     #2E4AB5;  /* secondary: classic ink blue, used sparingly */
+  --color-accent-soft:  rgba(193, 75, 42, 0.18);
+
+  /* Highlighter — soft warm yellow for key phrases */
+  --color-highlight:    #F4D65C;
+
+  /* Text-selection tint — warm orange, distinct from the yellow highlighter */
+  --color-selection:    #F4A261;
+
+  /* Fonts */
+  --font-display: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body:    "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-hand:    "Caveat", "Homemade Apple", "Comic Sans MS", cursive;
+  --font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Radii — paper has no sharp digital corners */
+  --radius-card:   8px;
+  --radius-chip:   999px;
+  --radius-button: 8px;
+}
+
+/* ---------------------------------------------------------------------------
+   DARK MODE — candlelight journal. Deep warm brown, not cold black.
+   ------------------------------------------------------------------------ */
+html[data-theme="dark"] {
+  --color-bg:        #17130D;
+  --color-bg-2:      #1E1A12;
+  --color-panel:     #221D14;
+  --color-rule:      #EDE7D6;
+  --color-border:    rgba(237, 231, 214, 0.10);
+  --color-border-2:  rgba(237, 231, 214, 0.22);
+
+  --color-ink:       #EDE7D6;
+  --color-ink-soft:  #C6BFAC;
+  --color-muted:     #8F8775;
+  --color-dim:       #5E5848;
+
+  --color-accent:       #E6774E;
+  --color-accent-2:     #7FA0FF;
+  --color-accent-soft:  rgba(230, 119, 78, 0.22);
+  --color-highlight:    #D9B347;
+  --color-selection:    #D97240;
+}
+
+/* ---------------------------------------------------------------------------
+   BASE
+   ------------------------------------------------------------------------ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  html[data-theme="dark"] { color-scheme: dark; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--color-ink);
+    background-color: var(--color-bg);
+    font-feature-settings: "ss01", "cv05";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.005em;
+    line-height: 1.55;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Paper grain texture + very subtle horizontal rule lines like notebook
+     paper. Both fixed-position so they don't scroll with content. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.055;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  html[data-theme="dark"] body::before {
+    mix-blend-mode: screen;
+    opacity: 0.04;
+  }
+
+  /* Very soft warm vignette */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(120% 80% at 50% 0%, transparent 60%, rgba(31, 26, 20, 0.06)),
+      radial-gradient(80% 60% at 50% 100%, transparent 60%, rgba(31, 26, 20, 0.05));
+  }
+  html[data-theme="dark"] body::after {
+    background:
+      radial-gradient(120% 80% at 50% 0%, transparent 60%, rgba(0, 0, 0, 0.25)),
+      radial-gradient(80% 60% at 50% 100%, transparent 60%, rgba(0, 0, 0, 0.2));
+  }
+
+  ::selection {
+    background: var(--color-selection);
+    color: var(--color-rule);
+  }
+  ::-moz-selection {
+    background: var(--color-selection);
+    color: var(--color-rule);
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.06;
+  }
+
+  .font-display { font-family: var(--font-display); }
+  .font-hand    { font-family: var(--font-hand); }
+  .font-mono    { font-family: var(--font-mono); }
+}
+
+/* ---------------------------------------------------------------------------
+   UTILITIES — journal primitives
+   ------------------------------------------------------------------------ */
+@layer utilities {
+  .shell { max-width: 78rem; margin-inline: auto; }
+
+  .section {
+    position: relative;
+    padding: clamp(3.5rem, 7vw, 6.5rem) clamp(1.25rem, 4vw, 3rem);
+  }
+
+  /* Chapter label — like a printed page header, mono uppercase small */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .eyebrow::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 1px;
+    background: currentColor;
+  }
+
+  /* Handwritten margin note */
+  .handnote {
+    font-family: var(--font-hand);
+    font-weight: 400;
+    color: var(--color-accent);
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+    transform: rotate(-2.5deg);
+    display: inline-block;
+  }
+  .handnote-flat { transform: none; }
+  .handnote-sm { font-size: 1.35rem; }
+  .handnote-md { font-size: 1.75rem; }
+  .handnote-lg { font-size: 2.25rem; }
+
+  /* Underline drawn like a pen — SVG squiggle behind inline text */
+  .ink-underline {
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .ink-underline::after {
+    content: "";
+    position: absolute;
+    left: -2px;
+    right: -2px;
+    bottom: -0.15em;
+    height: 0.55em;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 16' preserveAspectRatio='none'><path d='M2 10 C 40 2, 80 14, 120 6 S 178 10 178 10' stroke='%23C14B2A' stroke-width='2.5' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    z-index: -1;
+    opacity: 0.9;
+  }
+  html[data-theme="dark"] .ink-underline::after {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 16' preserveAspectRatio='none'><path d='M2 10 C 40 2, 80 14, 120 6 S 178 10 178 10' stroke='%23E6774E' stroke-width='2.5' fill='none' stroke-linecap='round'/></svg>");
+  }
+
+  /* Highlighter swipe (yellow marker through text) */
+  .ink-highlight {
+    background: linear-gradient(
+      180deg,
+      transparent 58%,
+      var(--color-highlight) 58%,
+      var(--color-highlight) 92%,
+      transparent 92%
+    );
+    padding: 0 0.05em;
+  }
+
+  /* Circled annotation — for numbers or short words */
+  .ink-circle {
+    position: relative;
+    display: inline-block;
+    padding: 0 0.15em;
+  }
+  .ink-circle::before {
+    content: "";
+    position: absolute;
+    inset: -0.25em -0.45em;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60'><ellipse cx='50' cy='30' rx='46' ry='24' stroke='%23C14B2A' stroke-width='2' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+  html[data-theme="dark"] .ink-circle::before {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60'><ellipse cx='50' cy='30' rx='46' ry='24' stroke='%23E6774E' stroke-width='2' fill='none'/></svg>");
+  }
+
+  /* Paper card — elevated slightly, hard edge, soft shadow */
+  .paper {
+    background: var(--color-panel);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.4) inset,
+      0 1px 2px rgba(31, 26, 20, 0.04),
+      0 18px 40px -28px rgba(31, 26, 20, 0.22);
+  }
+  html[data-theme="dark"] .paper {
+    box-shadow:
+      0 1px 0 rgba(237, 231, 214, 0.04) inset,
+      0 18px 40px -24px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Hairline rule */
+  .hr-pen {
+    height: 1px;
+    background: var(--color-rule);
+    opacity: 0.85;
+  }
+  .hr-soft {
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  /* Chip */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.65rem;
+    border: 1px solid var(--color-border-2);
+    border-radius: var(--radius-chip);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+    color: var(--color-ink-soft);
+    background: transparent;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+  .chip:hover {
+    color: var(--color-ink);
+    border-color: var(--color-rule);
+    background: var(--color-panel);
+  }
+
+  /* Primary button — like a rubber-stamp block of solid ink */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.8rem 1.2rem;
+    background: var(--color-ink);
+    color: var(--color-bg);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+    border-radius: var(--radius-button);
+    border: 1px solid var(--color-ink);
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #fff;
+  }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.78rem 1.15rem;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.95rem;
+    border-radius: var(--radius-button);
+    background: transparent;
+    border: 1px solid var(--color-border-2);
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .btn-ghost:hover {
+    background: var(--color-panel);
+    border-color: var(--color-rule);
+  }
+
+  /* Link that reads like a hyperlink in a printed book */
+  .book-link {
+    color: var(--color-accent);
+    border-bottom: 1px solid var(--color-accent);
+    padding-bottom: 1px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .book-link:hover {
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+
+  /* Section divider — "~ ~ ~" style ornament */
+  .ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    color: var(--color-muted);
+    font-family: var(--font-hand);
+    font-size: 2rem;
+    line-height: 1;
+  }
+  .ornament::before,
+  .ornament::after {
+    content: "";
+    width: 60px;
+    height: 1px;
+    background: var(--color-border-2);
+  }
+
+  /* Pulsing indicator dot */
+  .dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--color-accent);
+    box-shadow: 0 0 0 0 var(--color-accent-soft);
+    animation: pulse 2.4s ease-out infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 var(--color-accent-soft); }
+    70%  { box-shadow: 0 0 0 9px rgba(193, 75, 42, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(193, 75, 42, 0); }
+  }
+
+  /* Reveal on scroll — calm fade-in only, no translate. */
+  [data-reveal] {
+    opacity: 0;
+    transition: opacity 0.7s ease;
+  }
+  [data-reveal].is-visible {
+    opacity: 1;
+  }
+
+  /* Theme toggle icon visibility */
+  html[data-theme="dark"]  .theme-icon-moon { display: block; }
+  html[data-theme="dark"]  .theme-icon-sun  { display: none; }
+  html[data-theme="light"] .theme-icon-moon { display: none; }
+  html[data-theme="light"] .theme-icon-sun  { display: block; }
+
+  /* Smooth token swap on theme change */
+  html {
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+  body, .paper, .chip, .btn-ghost, .btn-primary {
+    transition:
+      background-color 0.35s ease,
+      color 0.35s ease,
+      border-color 0.35s ease;
+  }
+
+  /* Content above the paper overlay */
+  main, header, footer { position: relative; z-index: 2; }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .dot { animation: none; }
+    [data-reveal] { opacity: 1; transition: none; }
+    html { scroll-behavior: auto; }
+  }
+}

@@ -1,0 +1,18 @@
+---
+import { site } from "../data/content";
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-[var(--color-border)] mt-10">
+  <div class="shell grid grid-cols-1 md:grid-cols-3 gap-4 px-5 sm:px-8 py-8 items-center">
+    <span class="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-[var(--color-muted)]">
+      © {year} {site.fullName}
+    </span>
+    <span class="font-hand text-lg md:text-center text-[var(--color-muted)]">
+      handwritten in Lahore
+    </span>
+    <a href="#top" class="md:text-right font-mono text-[0.7rem] uppercase tracking-[0.14em] text-[var(--color-muted)] hover:text-[var(--color-accent)] transition-colors">
+      Back to the cover ↑
+    </a>
+  </div>
+</footer>

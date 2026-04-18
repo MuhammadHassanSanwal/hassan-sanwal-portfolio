@@ -1,0 +1,67 @@
+---
+import { experience } from "../data/content";
+---
+
+<section id="experience" class="section border-t border-[var(--color-border)]">
+  <div class="shell px-5 sm:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 mb-12" data-reveal>
+      <aside class="lg:col-span-2">
+        <p class="eyebrow">p.04</p>
+      </aside>
+      <div class="lg:col-span-10">
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-[var(--color-muted)] mb-4">
+          Chapter Four · Experience
+        </p>
+        <h2 class="font-display font-semibold tracking-[-0.035em] text-5xl sm:text-6xl lg:text-7xl leading-[1.02]">
+          Where the
+          <span class="ink-underline text-[var(--color-accent)]">work</span>
+          happened.
+        </h2>
+        <p class="mt-5 max-w-xl text-lg text-[var(--color-ink-soft)]">
+          Roles, contracts and the teams I've shipped with. More detail —
+          and references — available on request.
+        </p>
+      </div>
+    </div>
+
+    <ol class="flex flex-col">
+      {
+        experience.map((role, i) => (
+          <li
+            class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 py-8 lg:py-10 border-t border-[var(--color-border)] last:border-b"
+            data-reveal
+          >
+            <aside class="lg:col-span-2 flex lg:flex-col gap-3 justify-between lg:justify-start">
+              <span class="handnote handnote-md leading-none">
+                No. {String(i + 1).padStart(2, "0")}
+              </span>
+              <span class="font-mono text-xs uppercase tracking-[0.14em] text-[var(--color-muted)]">
+                {role.period}
+                {role.location && <span class="block mt-1">{role.location}</span>}
+              </span>
+            </aside>
+
+            <div class="lg:col-span-4">
+              <p class="text-sm text-[var(--color-ink-soft)] mb-1">{role.role}</p>
+              <h3 class="font-display text-2xl sm:text-3xl font-semibold tracking-[-0.025em] text-[var(--color-ink)] leading-tight">
+                {role.company}
+              </h3>
+            </div>
+
+            <ul class="lg:col-span-6 flex flex-col gap-3 text-[17px] leading-[1.55] text-[var(--color-ink-soft)]">
+              {role.bullets.map((b) => (
+                <li class="relative pl-5">
+                  <span
+                    class="absolute left-0 top-[0.7em] inline-block w-2 h-2 rounded-full"
+                    style="background: var(--color-accent);"
+                  />
+                  {b}
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

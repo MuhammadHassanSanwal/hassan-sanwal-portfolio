@@ -1,0 +1,84 @@
+---
+import { projects } from "../data/content";
+---
+
+<section id="work" class="section">
+  <div class="shell px-5 sm:px-8">
+    <!-- Section opener -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 mb-14 lg:mb-20" data-reveal>
+      <div class="lg:col-span-2">
+        <p class="eyebrow">p.02</p>
+      </div>
+      <div class="lg:col-span-10">
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-[var(--color-muted)] mb-4">
+          Chapter Two · Selected Work
+        </p>
+        <h2 class="font-display font-semibold tracking-[-0.035em] text-5xl sm:text-6xl lg:text-7xl leading-[1.02]">
+          Systems, not
+          <span class="ink-underline text-[var(--color-accent)]">scripts</span>.
+        </h2>
+        <p class="mt-5 max-w-2xl text-lg text-[var(--color-ink-soft)]">
+          A handful of builds I've shipped for international teams. Each one
+          replaced an entire manual workflow, not a single task.
+        </p>
+      </div>
+    </div>
+
+    <!-- Entries -->
+    <ol class="flex flex-col">
+      {
+        projects.map((project, i) => (
+          <li
+            class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 py-10 lg:py-14 border-t border-[var(--color-border)] last:border-b"
+            data-reveal
+          >
+            <!-- LEFT MARGIN: year + entry number -->
+            <aside class="lg:col-span-2 flex lg:flex-col items-start justify-between gap-3">
+              <span class="handnote handnote-md leading-none">
+                No. {String(i + 1).padStart(2, "0")}
+              </span>
+              <span class="font-mono text-xs uppercase tracking-[0.16em] text-[var(--color-muted)]">
+                {project.year} · {project.role}
+              </span>
+            </aside>
+
+            <!-- MAIN ENTRY -->
+            <article class="lg:col-span-10">
+              <h3 class="font-display font-semibold tracking-[-0.03em] text-3xl sm:text-4xl lg:text-[2.7rem] leading-[1.08] text-[var(--color-ink)] max-w-[22ch]">
+                {project.name}
+              </h3>
+
+              <p class="mt-5 text-lg leading-[1.6] text-[var(--color-ink-soft)] max-w-[62ch]">
+                {project.description}
+              </p>
+
+              {project.metrics && (
+                <ul class="mt-6 flex flex-wrap gap-x-6 gap-y-2">
+                  {project.metrics.map((m) => (
+                    <li class="flex items-center gap-2 font-mono text-[0.72rem] uppercase tracking-[0.1em] text-[var(--color-ink-soft)]">
+                      <span
+                        class="inline-block w-1.5 h-1.5 rounded-full"
+                        style="background: var(--color-accent);"
+                      />
+                      {m}
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              <div class="mt-6 flex flex-wrap gap-2">
+                {project.stack.map((tech) => (
+                  <span class="chip">{tech}</span>
+                ))}
+              </div>
+            </article>
+          </li>
+        ))
+      }
+    </ol>
+
+    <p class="mt-10 text-sm text-[var(--color-muted)] font-hand text-xl" data-reveal>
+      ...and a few more under NDA — ask me on a call.
+    </p>
+  </div>
+</section>

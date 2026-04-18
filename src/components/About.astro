@@ -1,0 +1,30 @@
+---
+import { about } from "../data/content";
+---
+
+<section id="about" class="section border-t border-[var(--color-border)]">
+  <div class="shell px-5 sm:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10" data-reveal>
+      <!-- LEFT MARGIN -->
+      <aside class="lg:col-span-2 flex lg:flex-col items-start justify-between gap-4 lg:gap-10">
+        <p class="eyebrow">p.03</p>
+        <span class="handnote handnote-md">{about.marginNote}</span>
+      </aside>
+
+      <div class="lg:col-span-10">
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-[var(--color-muted)] mb-4">
+          Chapter Three · About
+        </p>
+        <h2 class="font-display font-semibold tracking-[-0.035em] text-5xl sm:text-6xl lg:text-7xl leading-[1.02]">
+          <span class="ink-highlight">{about.headline.split(",")[0]},</span>
+          <br />
+          {about.headline.split(",").slice(1).join(",").trim()}
+        </h2>
+
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-5 text-lg leading-[1.6] text-[var(--color-ink-soft)] max-w-4xl">
+          {about.body.map((para) => <p>{para}</p>)}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

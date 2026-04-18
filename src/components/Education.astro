@@ -1,0 +1,44 @@
+---
+import { education } from "../data/content";
+---
+
+<section id="education" class="section border-t border-[var(--color-border)]">
+  <div class="shell px-5 sm:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10" data-reveal>
+      <aside class="lg:col-span-2 flex lg:flex-col items-start justify-between gap-4">
+        <p class="eyebrow">appendix A</p>
+        <span class="handnote handnote-sm hidden lg:inline">schooling</span>
+      </aside>
+
+      <div class="lg:col-span-10">
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-[var(--color-muted)] mb-4">
+          Appendix A · Education
+        </p>
+        <h2 class="font-display font-semibold tracking-[-0.035em] text-3xl sm:text-4xl lg:text-5xl leading-[1.06] mb-8">
+          Paper trail.
+        </h2>
+
+        <ol class="flex flex-col">
+          {
+            education.map((e, i) => (
+              <li class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-6 py-5 border-t border-[var(--color-border)] last:border-b items-baseline">
+                <span class="md:col-span-1 font-mono text-xs tracking-[0.12em] text-[var(--color-muted)]">
+                  /0{i + 1}
+                </span>
+                <span class="md:col-span-5 font-display text-xl sm:text-2xl font-semibold tracking-[-0.02em] text-[var(--color-ink)]">
+                  {e.institution}
+                </span>
+                <span class="md:col-span-4 text-[var(--color-ink-soft)]">
+                  {e.credential}
+                </span>
+                <span class="md:col-span-2 md:text-right font-mono text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
+                  {e.period ?? ""}
+                </span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>

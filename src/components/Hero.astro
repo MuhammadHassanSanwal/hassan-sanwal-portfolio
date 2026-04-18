@@ -1,0 +1,90 @@
+---
+import { hero, site } from "../data/content";
+---
+
+<section id="top" class="relative pt-10 sm:pt-16 lg:pt-20 pb-16 sm:pb-24">
+  <div class="shell px-5 sm:px-8">
+    <!-- Page header strip: volume number + date + availability -->
+    <div class="flex flex-wrap items-center justify-between gap-3 pb-8 border-b border-[var(--color-border)] eyebrow" data-reveal>
+      <span>{hero.dateStamp}</span>
+      <span class="flex items-center gap-2 normal-case tracking-wide text-[var(--color-ink-soft)]" style="font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em;">
+        <span class="dot"></span>
+        {hero.badge}
+      </span>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 pt-12 sm:pt-16">
+      <!-- LEFT: hand-written margin tag + chapter number -->
+      <aside class="lg:col-span-2 order-2 lg:order-1 flex lg:flex-col items-start justify-between gap-4 lg:gap-10" data-reveal>
+        <span class="font-mono text-xs uppercase tracking-[0.18em] text-[var(--color-muted)]">p.01</span>
+        <span class="handnote handnote-md leading-none">{hero.marginNote}</span>
+      </aside>
+
+      <!-- MAIN: greeting + name + intro -->
+      <div class="lg:col-span-9 order-1 lg:order-2" data-reveal>
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-[var(--color-muted)] mb-4">
+          Chapter One · Introduction
+        </p>
+
+        <h1 class="font-display font-semibold tracking-[-0.035em] leading-[0.96]">
+          <span class="block text-3xl sm:text-4xl lg:text-5xl text-[var(--color-ink-soft)] mb-2">
+            {hero.greeting}
+          </span>
+          <span class="block text-[18vw] sm:text-[14vw] lg:text-[10rem] xl:text-[11.5rem] text-[var(--color-ink)]">
+            {hero.name}
+          </span>
+        </h1>
+
+        <p class="mt-8 sm:mt-10 max-w-2xl text-lg sm:text-xl lg:text-[1.35rem] leading-[1.55] text-[var(--color-ink-soft)]">
+          I design and build AI-driven
+          <span class="ink-highlight font-medium text-[var(--color-ink)]">automation</span>,
+          backend services, and full-stack products — the kind that replace
+          entire
+          <span class="ink-underline font-medium text-[var(--color-ink)]">workflows</span>,
+          not a single task.
+        </p>
+
+        <div class="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <a href="#work" class="btn-primary">
+            Read the entries
+            <span aria-hidden="true">→</span>
+          </a>
+          <a href={`mailto:${site.email}`} class="btn-ghost">
+            {site.email}
+            <span aria-hidden="true">↗</span>
+          </a>
+          {
+            site.resumeUrl && (
+              <a href={site.resumeUrl} class="btn-ghost" target="_blank" rel="noopener">
+                Download CV
+                <span aria-hidden="true">↓</span>
+              </a>
+            )
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Meta strip at the bottom: role, location, vol -->
+    <div class="mt-16 sm:mt-20 grid grid-cols-2 sm:grid-cols-4 gap-6 pt-8 border-t border-[var(--color-border)] text-sm" data-reveal>
+      <div>
+        <p class="eyebrow mb-1.5">Role</p>
+        <p class="text-[var(--color-ink)]">{site.title}</p>
+      </div>
+      <div>
+        <p class="eyebrow mb-1.5">Based in</p>
+        <p class="text-[var(--color-ink)]">{site.location}</p>
+      </div>
+      <div>
+        <p class="eyebrow mb-1.5">Timezone</p>
+        <p class="text-[var(--color-ink)]">{site.timezone}</p>
+      </div>
+      <div>
+        <p class="eyebrow mb-1.5">Local time</p>
+        <p class="text-[var(--color-ink)]">
+          <span data-clock>--:--</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

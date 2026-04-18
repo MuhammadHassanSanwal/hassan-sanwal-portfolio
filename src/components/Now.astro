@@ -1,0 +1,44 @@
+---
+import { now } from "../data/content";
+---
+
+<section id="now" class="section border-t border-[var(--color-border)]">
+  <div class="shell px-5 sm:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10" data-reveal>
+      <aside class="lg:col-span-2">
+        <p class="eyebrow">p.06</p>
+      </aside>
+
+      <div class="lg:col-span-10">
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-[var(--color-muted)] mb-4">
+          Chapter Six · Currently
+        </p>
+        <div class="flex items-baseline gap-4 flex-wrap mb-8">
+          <h2 class="font-display font-semibold tracking-[-0.035em] text-5xl sm:text-6xl lg:text-7xl leading-[1.02]">
+            Right now —
+          </h2>
+          <span class="handnote handnote-lg">dated {now.updated}</span>
+        </div>
+
+        <ol class="flex flex-col divide-y divide-[var(--color-border)] border-y border-[var(--color-border)]">
+          {
+            now.items.map((item, i) => (
+              <li class="flex items-start gap-5 py-5 lg:py-6">
+                <span class="font-mono text-xs tracking-[0.12em] text-[var(--color-accent)] mt-2 shrink-0">
+                  /0{i + 1}
+                </span>
+                <p class="text-xl sm:text-2xl leading-snug text-[var(--color-ink)] tracking-[-0.015em] max-w-3xl">
+                  {item}
+                </p>
+              </li>
+            ))
+          }
+        </ol>
+
+        <p class="mt-6 font-hand text-xl text-[var(--color-muted)]">
+          (updated whenever the page turns.)
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
