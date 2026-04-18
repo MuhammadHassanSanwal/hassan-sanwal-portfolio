@@ -6,10 +6,10 @@ import ThemeToggle from "./ThemeToggle.astro";
 <header class="sticky top-0 z-50 bg-[color-mix(in_srgb,var(--color-bg)_88%,transparent)] backdrop-blur border-b border-[var(--color-border)]">
   <div class="shell flex items-center justify-between gap-4 px-5 sm:px-8 py-3.5">
     <a href="#top" class="flex items-baseline gap-3 min-w-0 group">
-      <span class="font-display font-semibold tracking-tight text-[1.02rem] text-[var(--color-ink)]">
+      <span class="font-display font-semibold tracking-tight text-[1.02rem] text-[var(--color-ink)] truncate">
         {site.name}
       </span>
-      <span class="hidden sm:inline font-mono text-[0.62rem] uppercase tracking-[0.18em] text-[var(--color-muted)]">
+      <span class="hidden sm:inline font-mono text-[0.62rem] uppercase tracking-[0.18em] text-[var(--color-muted)] whitespace-nowrap">
         — {site.locationShort}
       </span>
     </a>
@@ -38,43 +38,65 @@ import ThemeToggle from "./ThemeToggle.astro";
     </nav>
 
     <!-- Mobile controls -->
-    <div class="lg:hidden flex items-center gap-2">
+    <div class="lg:hidden flex items-center gap-2 shrink-0">
       <ThemeToggle />
       <button
         type="button"
         data-nav-toggle
         aria-expanded="false"
+        aria-controls="mobile-nav-panel"
         aria-label="Open menu"
-        class="inline-flex items-center gap-2 px-3.5 py-2 rounded-md border border-[var(--color-border-2)] bg-transparent font-mono text-[0.7rem] uppercase tracking-[0.1em] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] hover:border-[var(--color-rule)] transition-colors"
+        class="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-[var(--color-border-2)] bg-transparent font-mono text-[0.7rem] uppercase tracking-[0.1em] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] hover:border-[var(--color-rule)] transition-colors min-h-[40px]"
       >
-        Menu
-        <span class="flex flex-col gap-[3px]">
-          <span class="block h-[1.5px] w-4 bg-current"></span>
-          <span class="block h-[1.5px] w-4 bg-current"></span>
+        <span data-nav-label>Menu</span>
+        <span class="burger" aria-hidden="true">
+          <span></span>
+          <span></span>
         </span>
       </button>
     </div>
   </div>
 
-  <!-- Mobile panel — feels like opening the table of contents -->
+  <!-- Mobile panel — true full-screen takeover, lives outside the
+       sticky header's transparent bg so it can never be misread as
+       "broken" -->
   <div
+    id="mobile-nav-panel"
     data-nav-panel
-    data-open="false"
-    class="lg:hidden fixed inset-0 top-0 pt-20 px-5 bg-[var(--color-bg)] data-[open=false]:pointer-events-none data-[open=false]:opacity-0 data-[open=true]:opacity-100 transition-opacity duration-300 z-40 overflow-y-auto"
+    class="nav-panel lg:hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Site navigation"
   >
-    <div class="shell pb-10">
+    <!-- Inline panel header so we have a clear way to close on mobile -->
+    <div class="flex items-center justify-between gap-4 px-5 sm:px-8 py-3.5 border-b border-[var(--color-border)]">
+      <span class="font-display font-semibold tracking-tight text-[1.02rem] text-[var(--color-ink)]">
+        {site.name}
+      </span>
+      <button
+        type="button"
+        data-nav-close
+        aria-label="Close menu"
+        class="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-[var(--color-border-2)] font-mono text-[0.7rem] uppercase tracking-[0.1em] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] hover:border-[var(--color-rule)] transition-colors min-h-[40px]"
+      >
+        Close
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+
+    <div class="shell px-5 sm:px-8 pt-8 pb-12 flex-1">
       <p class="eyebrow mb-6">Table of Contents</p>
       <nav class="flex flex-col">
         {
           nav.map((item) => (
             <a
               href={item.href}
-              class="group flex items-baseline justify-between py-4 border-b border-[var(--color-border)] hover:text-[var(--color-accent)] transition-colors"
+              class="group flex items-baseline justify-between gap-4 py-4 border-b border-[var(--color-border)] hover:text-[var(--color-accent)] transition-colors"
             >
-              <span class="font-display text-3xl font-semibold tracking-[-0.02em] text-[var(--color-ink)] group-hover:text-[var(--color-accent)] transition-colors">
+              <span class="font-display text-[clamp(1.6rem,7vw,2.25rem)] font-semibold tracking-[-0.02em] text-[var(--color-ink)] group-hover:text-[var(--color-accent)] transition-colors">
                 {item.label}
               </span>
-              <span class="font-mono text-xs tracking-[0.14em] text-[var(--color-muted)]">
+              <span class="font-mono text-xs tracking-[0.14em] text-[var(--color-muted)] shrink-0">
                 {item.page}
               </span>
             </a>

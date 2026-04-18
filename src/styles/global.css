@@ -412,6 +412,66 @@ html[data-theme="dark"] {
   /* Content above the paper overlay */
   main, header, footer { position: relative; z-index: 2; }
 
+  /* ---- Mobile nav panel (bookmark-style table of contents) -------- */
+  .nav-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.28s ease,
+      transform 0.28s ease,
+      visibility 0.28s ease;
+    visibility: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-panel.is-open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    visibility: visible;
+  }
+  @media (min-width: 64rem) {
+    .nav-panel { display: none !important; }
+  }
+
+  /* Burger → X icon transition */
+  .burger {
+    position: relative;
+    display: inline-block;
+    width: 18px;
+    height: 14px;
+  }
+  .burger > span {
+    position: absolute;
+    left: 0;
+    width: 18px;
+    height: 1.6px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.2s ease, top 0.25s ease;
+  }
+  .burger > span:nth-child(1) { top: 3px; }
+  .burger > span:nth-child(2) { top: 10px; }
+  [aria-expanded="true"] .burger > span:nth-child(1) {
+    top: 6.5px;
+    transform: rotate(45deg);
+  }
+  [aria-expanded="true"] .burger > span:nth-child(2) {
+    top: 6.5px;
+    transform: rotate(-45deg);
+  }
+
+  /* When mobile nav is open, lock background scroll */
+  body.nav-open { overflow: hidden; }
+
   /* Toast — small bottom-center confirmation pill (e.g. "Email copied") */
   .toast-root {
     position: fixed;

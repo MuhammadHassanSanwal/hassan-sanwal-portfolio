@@ -195,23 +195,50 @@ const {
       // ---- Mobile nav toggle --------------------------------------------
       const navToggle = document.querySelector<HTMLButtonElement>("[data-nav-toggle]");
       const navPanel = document.querySelector<HTMLElement>("[data-nav-panel]");
+      const navCloseBtn = document.querySelector<HTMLButtonElement>("[data-nav-close]");
+      const navLabel = document.querySelector<HTMLElement>("[data-nav-label]");
+
       if (navToggle && navPanel) {
-        const close = () => {
-          navPanel.dataset.open = "false";
-          navToggle.setAttribute("aria-expanded", "false");
-          document.body.style.overflow = "";
+        const setOpen = (open: boolean) => {
+          navPanel.classList.toggle("is-open", open);
+          navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+          navToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+          if (navLabel) navLabel.textContent = open ? "Close" : "Menu";
+          document.body.classList.toggle("nav-open", open);
         };
+
         navToggle.addEventListener("click", () => {
-          const open = navPanel.dataset.open === "true";
-          if (open) {
-            close();
-          } else {
-            navPanel.dataset.open = "true";
-            navToggle.setAttribute("aria-expanded", "true");
-            document.body.style.overflow = "hidden";
+          setOpen(!navPanel.classList.contains("is-open"));
+        });
+        navCloseBtn?.addEventListener("click", () => setOpen(false));
+
+        // Close when any nav link is tapped
+        navPanel.querySelectorAll("a").forEach((a) =>
+          a.addEventListener("click", () => setOpen(false))
+        );
+
+        // Escape key closes the panel
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && navPanel.classList.contains("is-open")) {
+            setOpen(false);
+            navToggle.focus();
           }
         });
-        navPanel.querySelectorAll("a").forEach((a) => a.addEventListener("click", close));
+
+        // If the viewport grows past lg while open, auto-close so we don't
+        // leave a stray open class around.
+        const mql = window.matchMedia("(min-width: 64rem)");
+        const onMqlChange = (ev: MediaQueryListEvent | MediaQueryList) => {
+          if ((ev as MediaQueryList).matches ?? (ev as MediaQueryListEvent).matches) {
+            setOpen(false);
+          }
+        };
+        if (mql.addEventListener) {
+          mql.addEventListener("change", onMqlChange);
+        } else {
+          // Older Safari
+          mql.addListener(onMqlChange);
+        }
       }
     </script>
   </body>
