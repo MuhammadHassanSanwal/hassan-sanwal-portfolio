@@ -26,7 +26,7 @@ export const hero = {
   intro:
     "I design and build AI-driven automation, backend services, and full-stack products — the kind that replace entire workflows, not a single task.",
   marginNote: "a field notebook",
-  dateStamp: "Vol. 01 · Spring 2026",
+  dateStamp: "Vol. 01 · Summer 2026",
   badge: "Currently available for new work",
 };
 
@@ -62,9 +62,9 @@ export const projects: Project[] = [
     summary:
       "End-to-end lead pipeline for a Swiss fintech — enrichment, AI-driven scoring, regional assignment and live CRM sync.",
     description:
-      "Ingests leads from multiple sources, enriches them, and scores them with AI in real time. Low-score leads are handed to a Vapi voice agent for qualification; high-score leads get a generated pitch and land in Salesforce with region- and score-based routing, automatic team notifications, and full CRM sync. Part of 20+ production workflows shipped across sales, marketing and customer ops.",
-    stack: ["n8n", "Vapi", "Salesforce", "OpenAI", "Slack API", "Webhooks"],
-    metrics: ["20+ production workflows", "Real-time AI scoring", "Region-based routing"],
+      "A four-workflow ecosystem that runs like an autonomous sales department for a Swiss fintech. Leads are captured from multiple entry points, enriched via Apollo and LinkedIn, then researched by AI before a seven-factor model scores each one. High-scoring leads route to regional reps by language and geography and sync straight into the CRM; the rest get an AI voice call within minutes. A self-learning loop reviews past executions to keep improving the pitch — no manual tuning.",
+    stack: ["n8n", "Vapi", "Salesforce", "OpenAI", "Apollo.io", "Supabase"],
+    metrics: ["2–3 hrs → <15 min per lead", "7-factor AI scoring", "Self-learning pitch loop"],
   },
   {
     slug: "ai-voice-agent",
@@ -74,9 +74,9 @@ export const projects: Project[] = [
     summary:
       "Outbound voice AI with regional caller ID, CRM-driven personalization, voicemail retry logic and automated post-call analysis.",
     description:
-      "A Vapi-powered outbound calling system that dials qualified leads with a region-matched caller ID, pulls conversation context from the CRM for each call, retries intelligently on voicemail, and runs structured post-call analysis that writes notes and next steps straight back into the deal record.",
-    stack: ["Vapi", "n8n", "OpenAI", "Salesforce", "Webhooks"],
-    metrics: ["Regional caller ID", "CRM-driven personalization", "Post-call analysis"],
+      "A Vapi-powered outbound calling agent with a natural ElevenLabs voice that dials qualified leads using a region-matched caller ID. It pulls each lead's context from the CRM, holds a real discovery conversation, retries intelligently on voicemail, and runs structured post-call analysis that writes notes, next steps and a call summary straight back into the deal record and the team channel.",
+    stack: ["Vapi", "ElevenLabs", "n8n", "OpenAI", "Salesforce"],
+    metrics: ["Natural voice (ElevenLabs)", "Region-matched caller ID", "Auto post-call notes"],
   },
   {
     slug: "social-automation-suite",
@@ -86,9 +86,21 @@ export const projects: Project[] = [
     summary:
       "A 13-workflow, 350+ node multi-agent system that generates, brands, illustrates and ships content across every major social platform.",
     description:
-      "Architected a multi-agent content engine spanning 13 workflows and 350+ nodes. Platform-specific AI agents draft copy and imagery within brand guidelines, image generation is fully automated, and users can trigger or remix custom generations. Approvals and scheduling happen in-channel via Slack.",
-    stack: ["n8n", "OpenAI", "Image APIs", "Slack API", "Webhooks"],
-    metrics: ["13 workflows · 350+ nodes", "Multi-agent pipeline", "Brand-guideline enforced"],
+      "A conversational multi-agent system run entirely from a single Slack channel. A master orchestrator delegates to specialist agents for content creation, asset management and database ops — drafting platform-specific posts within brand guidelines, generating on-brand AI imagery, and pulling competitor intelligence from five social platforms into a vector store for ideation. Spans 13 workflows and 350+ nodes; approvals and scheduling happen in-channel.",
+    stack: ["n8n", "OpenAI", "Slack API", "Supabase Vector", "Apify"],
+    metrics: ["13 workflows · 350+ nodes", "Master + specialist agents", "5-platform competitor intel"],
+  },
+  {
+    slug: "conversation-intelligence",
+    name: "Conversation Intelligence & Lead Routing",
+    year: "2025–26",
+    role: "AI Automation Engineer · RobustCraft",
+    summary:
+      "Dual-webhook system that classifies every support conversation in real time — churn alerts, intent tagging and automatic CRM routing.",
+    description:
+      "Runs two parallel paths on every support conversation. A real-time path watches incoming messages and instantly alerts the team on churn keywords, billing urgency or negative sentiment. A closed-conversation path cleans the full thread and classifies it into eight categories with confidence scores, priority and a suggested next action, then cross-references the CRM to enrich leads and open opportunities — all with zero manual triage.",
+    stack: ["n8n", "Intercom API", "OpenAI", "Salesforce", "Microsoft Teams"],
+    metrics: ["Real-time churn alerts", "8-way AI classification", "Zero manual triage"],
   },
   {
     slug: "crm-two-way-sync",
@@ -98,9 +110,9 @@ export const projects: Project[] = [
     summary:
       "Real-time two-way sync between CRM instances — bulk migration, webhook-driven live sync, loop prevention and calendar sync.",
     description:
-      "Keeps two CRM sub-accounts consistent in both directions. Handles bulk historical migration on first run, then switches to live webhook sync with loop-prevention and back-off on collisions. Full custom-field mapping plus appointment and blocked-slot calendar sync so two operations teams stay on one shared source of truth.",
-    stack: ["GoHighLevel API", "n8n", "Webhooks", "REST APIs"],
-    metrics: ["Bulk + live sync", "Loop-safe", "Contacts + calendars"],
+      "A six-workflow ecosystem that keeps two CRM instances in sync across the full contact lifecycle. It handles one-time bulk migration, then switches to live webhook sync — mapping 43 custom fields bidirectionally, resolving conflicts and merging duplicates. A shared dedup lock prevents echo loops, while scheduled jobs mirror contact deletions, appointments and blocked calendar slots in both directions.",
+    stack: ["GoHighLevel API", "n8n", "Supabase", "Webhooks"],
+    metrics: ["6-workflow ecosystem", "43 fields mapped both ways", "Echo-loop safe"],
   },
   {
     slug: "gmail-outreach",
@@ -110,21 +122,33 @@ export const projects: Project[] = [
     summary:
       "Automated cold outreach with AI-generated sequences, reply detection, sentiment analysis and intent-based auto-responses.",
     description:
-      "A Gmail-based outreach system with multi-day cadences. Every reply is classified for intent and sentiment — the workflow either drafts a context-aware response, pauses the sequence, or escalates to a human. No more leads slipping between follow-ups.",
-    stack: ["Gmail API", "n8n", "OpenAI", "Google Workspace"],
-    metrics: ["Intent + sentiment analysis", "Multi-day cadences", "Auto-reply by intent"],
+      "A natural-language outreach pipeline: a prompt like 'find CEOs of mid-sized SaaS companies in Germany' is parsed into a lead search, enriched, then checked against the CRM to route each contact into an inbound or outbound email sequence. Every reply is classified for intent and sentiment — the workflow drafts a context-aware response, pauses the sequence on a negative, or escalates a hot lead to a LinkedIn connection flow.",
+    stack: ["n8n", "Apollo.io", "OpenAI", "Salesforce", "Gmail API"],
+    metrics: ["NL → lead search", "Inbound/outbound routing", "Intent + sentiment replies"],
   },
   {
-    slug: "corporate-espionage",
-    name: "Corporate Espionage — UE5 Multiplayer",
-    year: "2024",
-    role: "Lead Game Developer · Newton Hewitt & Co / Shaper.US",
+    slug: "rag-knowledge-base",
+    name: "Grounded PDF Knowledge Base (RAG)",
+    year: "2025–26",
+    role: "AI Automation Engineer · Independent",
     summary:
-      "A corporate-espionage-themed multiplayer game MVP built in Unreal Engine 5 with Epic Online Services for lobbies and online play.",
+      "A retrieval-augmented chatbot that answers strictly from your documents — no hallucinations, no outside-knowledge bleed.",
     description:
-      "Led an MVP build of an office-themed multiplayer game in Unreal Engine 5. Designed the core game loop, task and role assignment systems, and wired in multiplayer synchronization via Epic Online Services for lobby management and online sessions.",
-    stack: ["Unreal Engine 5", "Epic Online Services", "Multiplayer", "Gamification"],
-    metrics: ["MVP shipped", "Role-based gameplay", "Online lobbies"],
+      "Extracts and chunks uploaded PDFs, embeds them into a vector store, and answers natural-language questions using only the most relevant retrieved context. Responses are fully grounded in the source document, so the assistant can sit on technical manuals, compliance docs or any private corpus without inventing facts or leaking external knowledge.",
+    stack: ["n8n", "Supabase Vector", "Google Gemini", "RAG"],
+    metrics: ["No hallucination", "Vector retrieval", "Any document type"],
+  },
+  {
+    slug: "employee-onboarding",
+    name: "Employee Onboarding Automation",
+    year: "2025–26",
+    role: "AI Automation Engineer · Independent",
+    summary:
+      "A form-triggered pipeline that takes a new hire from ID upload to signed NDA — accounts, drives, documents and welcome email, all automatic.",
+    description:
+      "Triggered by a single onboarding form, the workflow extracts employee details straight from uploaded ID and certificate documents, provisions email and workspace accounts, builds a structured Drive folder hierarchy, populates NDA and SOW templates with the new hire's data, converts them to PDF and kicks off a digital signing flow — then sends a welcome email on completion. Onboarding that took hours now runs in minutes with zero manual data entry.",
+    stack: ["n8n", "Google Workspace", "Zoho Mail", "OCR / Doc parsing", "E-Signature"],
+    metrics: ["Hours → minutes", "Auto account provisioning", "NDA e-signing"],
   },
 ];
 
@@ -147,6 +171,7 @@ export const experience: Role[] = [
       "Built an AI voice calling agent (Vapi) for outbound sales — regional caller ID, CRM-driven conversation personalization, voicemail retry logic, and automated post-call analysis back into the deal record.",
       "Architected a 13-workflow, 350+ node multi-agent social media automation system with AI content generation across platforms, image generation and brand-guideline enforcement.",
       "Engineered a real-time bidirectional CRM sync — bulk migration, live webhook sync, loop prevention, custom-field mapping and calendar sync between two sub-accounts.",
+      "Built a real-time conversation-intelligence layer over the support inbox — dual-webhook churn alerts, AI classification into eight categories, and automatic CRM enrichment and opportunity creation.",
       "Built automated cold email outreach with AI-generated sequences, reply detection and sentiment analysis, plus a knowledge-base-driven AI customer support chatbot and multilingual landing pages across four languages.",
     ],
   },
@@ -201,7 +226,7 @@ export const skills = {
     },
     {
       label: "Automation & AI",
-      items: ["n8n", "Make", "Zapier", "Vapi", "OpenAI APIs", "Prompt engineering"],
+      items: ["n8n", "Make", "Zapier", "Vapi", "OpenAI APIs", "Google Gemini", "LangChain", "RAG / Vector DBs", "Prompt engineering"],
     },
     {
       label: "Integrations & Data",
@@ -209,6 +234,8 @@ export const skills = {
         "Salesforce",
         "GoHighLevel",
         "Intercom",
+        "Apollo.io",
+        "Apify",
         "Slack API",
         "Gmail API",
         "REST APIs",
@@ -221,7 +248,7 @@ export const skills = {
 };
 
 export const now = {
-  updated: "April 2026",
+  updated: "June 2026",
   items: [
     "Full-time as an AI automation engineer — shipping production systems across sales, marketing and customer ops for a Swiss fintech client.",
     "Running my own software agency in parallel — selective client work on automations, AI integrations and full-stack builds.",
