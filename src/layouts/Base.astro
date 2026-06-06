@@ -358,5 +358,14 @@ const websiteLd = {
         }
       }
     </script>
+
+    {/* OmniSai chat widget. is:inline keeps Astro from bundling it so the
+        vendor's data-* attributes are preserved verbatim. */}
+    <script
+      is:inline
+      src="https://pub-fb1afad4d89746f3bbeb5a2a8de94d1a.r2.dev/static/widget.js"
+      data-token="f66fbbae-994f-4037-86e4-e5113fcd2426"
+      data-api-url="https://api.theomnisai.com"
+      defer></script>
   </body>
 </html>
